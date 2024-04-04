@@ -1,19 +1,10 @@
 package com.bancodigital.repository;
 
-import java.util.ArrayList;
-
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 import com.bancodigital.entity.Cliente;
 
-public class ClienteRepository {
+@Repository
+public interface ClienteRepository extends JpaRepository<Cliente, Long> {
 	
-	ArrayList<Cliente> listaClientes = new ArrayList<>();
-	
-	public void save(Cliente cliente) {
-		listaClientes.add(cliente);
-	}
-	
-	public ArrayList<Cliente> listAll(){
-		return listaClientes;
-	}
-
 }
