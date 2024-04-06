@@ -9,10 +9,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @EnableJpaRepositories("com.bancodigital.repository")
+@EntityScan("com.bancodigital.entity")
 public class BancodigitalApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BancodigitalApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BancodigitalApplication.class, args);
+    }
 
 }

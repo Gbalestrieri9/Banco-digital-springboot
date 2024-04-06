@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class testeController {
 	
 	@GetMapping("/health")
-	public String olaMundo(){
-		return "Hello Word!";
+	public String TesteServidor(){
+		return "Ok";
 	}
 
 }
