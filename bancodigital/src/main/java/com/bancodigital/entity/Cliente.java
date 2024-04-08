@@ -1,5 +1,6 @@
 package com.bancodigital.entity;
 
+import java.sql.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,12 +16,14 @@ public class Cliente {
 	private String cpf;
 	private String nome;
 	private String endereco;
+	private Date data;
 	
-	public Cliente(String cpf, String nome, String endereco) {
+	public Cliente(String cpf, String nome, String endereco, Date data) {
 		super();
 		this.cpf = cpf;
 		this.nome = nome;
 		this.endereco = endereco;
+		this.setData(data);
 	}
 
 	public String getCpf() {
@@ -53,5 +56,13 @@ public class Cliente {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
 	}
 }

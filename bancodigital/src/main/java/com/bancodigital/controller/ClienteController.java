@@ -1,5 +1,6 @@
 package com.bancodigital.controller;
 
+import java.sql.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,8 @@ public class ClienteController {
 
     @PostMapping("/create/account")
     public void addCliente(@RequestBody Cliente cliente) {
-        clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco());
+        Date dataSql = new Date(cliente.getData().getTime());
+        clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql);
     }
 
     @GetMapping("/all")

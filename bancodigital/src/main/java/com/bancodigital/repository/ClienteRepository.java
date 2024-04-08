@@ -2,6 +2,7 @@ package com.bancodigital.repository;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -22,13 +23,13 @@ public class ClienteRepository {
         connection = DriverManager.getConnection(url, user, password);
     }
 
-    // Método para chamar a stored procedure criar_cliente
-    public void criarCliente(String cpf, String nome, String endereco) throws SQLException {
-        String sql = "{call criar_cliente(?, ?, ?)}";
+    public void criarCliente(String cpf, String nome, String endereco, Date data) throws SQLException {
+        String sql = "{call criar_cliente(?, ?, ?, ?)}";
         try (CallableStatement statement = connection.prepareCall(sql)) {
             statement.setString(1, cpf);
             statement.setString(2, nome);
             statement.setString(3, endereco);
+            statement.setDate(4, data); // Define a data
             statement.execute();
         }
     }
