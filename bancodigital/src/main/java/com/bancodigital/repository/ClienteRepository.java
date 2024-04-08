@@ -23,13 +23,15 @@ public class ClienteRepository {
         connection = DriverManager.getConnection(url, user, password);
     }
 
-    public void criarCliente(String cpf, String nome, String endereco, Date data) throws SQLException {
-        String sql = "{call criar_cliente(?, ?, ?, ?)}";
+    public void criarCliente(String cpf, String nome, String endereco, Date data, String senha, String tipoConta) throws SQLException {
+        String sql = "{call criar_cliente(?, ?, ?, ?, ?, ?)}";
         try (CallableStatement statement = connection.prepareCall(sql)) {
             statement.setString(1, cpf);
             statement.setString(2, nome);
             statement.setString(3, endereco);
             statement.setDate(4, data); // Define a data
+            statement.setString(5, senha);
+            statement.setString(6, tipoConta);
             statement.execute();
         }
     }

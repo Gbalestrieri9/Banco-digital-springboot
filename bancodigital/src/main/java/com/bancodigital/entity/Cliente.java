@@ -17,13 +17,17 @@ public class Cliente {
 	private String nome;
 	private String endereco;
 	private Date data;
+	private String senha;
+	private String tipoConta;
 	
-	public Cliente(String cpf, String nome, String endereco, Date data) {
+	public Cliente(String cpf, String nome, String endereco, Date data,String senha,String tipoConta) {
 		super();
 		this.cpf = cpf;
 		this.nome = nome;
 		this.endereco = endereco;
 		this.setData(data);
+		this.setSenha(senha);
+		this.setTipoConta(tipoConta);
 	}
 
 	public String getCpf() {
@@ -64,5 +68,21 @@ public class Cliente {
 
 	public void setData(Date data) {
 		this.data = data;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	public String getTipoConta() {
+		return tipoConta;
+	}
+
+	public void setTipoConta(String tipoConta) {
+		this.tipoConta = tipoConta;
 	}
 }

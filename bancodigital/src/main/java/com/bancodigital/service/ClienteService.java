@@ -14,8 +14,8 @@ public class ClienteService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void criarCliente(String cpf, String nome, String endereco, Date data) {
-        jdbcTemplate.update("CALL criar_cliente(?, ?, ?, ?)", cpf, nome, endereco, new java.sql.Date(data.getTime()));
+    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta) {
+        jdbcTemplate.update("CALL criar_cliente(?, ?, ?, ?, ?, ?)", cpf, nome, endereco, new java.sql.Date(data.getTime()), senha,tipoConta);
     }
 
     public List<Cliente> listarClientes() {
@@ -24,7 +24,9 @@ public class ClienteService {
                 rs.getString("cpf"),
                 rs.getString("nome"),
                 rs.getString("endereco"),
-                rs.getDate("data")
+                rs.getDate("data"),
+                rs.getString("senha"),
+                rs.getString("tipoConta")
             );
             return cliente;
         });
