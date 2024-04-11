@@ -23,4 +23,21 @@ public class ClienteService {
     public List<Cliente> listarClientes() {
     	return jdbcTemplateDaoImpl.listarClientes();
     }
+    
+    public void transferirSaldo(String cpfOrigem, String cpfDestino, double valor) {
+        Cliente clienteOrigem = jdbcTemplateDaoImpl.buscarClientePorCpf(cpfOrigem);
+        Cliente clienteDestino = jdbcTemplateDaoImpl.buscarClientePorCpf(cpfDestino);
+        
+        if (clienteOrigem != null && clienteDestino != null && clienteOrigem.getSaldo() >= valor) {
+            double novoSaldoOrigem = clienteOrigem.getSaldo() - valor;
+            double novoSaldoDestino = clienteDestino.getSaldo() + valor;
+            
+            jdbcTemplateDaoImpl.atualizarSaldoCliente(cpfOrigem, novoSaldoOrigem);
+            jdbcTemplateDaoImpl.atualizarSaldoCliente(cpfDestino, novoSaldoDestino);
+            
+            System.out.println("Transferência realizada com sucesso!");
+        } else {
+            System.out.println("Transferência não pode ser concluída. Verifique os dados informados.");
+        }
+    }
 }

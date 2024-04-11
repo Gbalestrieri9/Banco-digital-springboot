@@ -28,5 +28,8 @@ public class ClienteController {
         return clienteService.listarClientes();
     }
     
-    
+    @PostMapping("/transferir")
+    public void transferirSaldo(@RequestBody String cpfOrigem, @RequestBody String cpfDestino, @RequestBody double valor) {
+        clienteService.transferirSaldo(cpfOrigem, cpfDestino, valor);
+    }
 }

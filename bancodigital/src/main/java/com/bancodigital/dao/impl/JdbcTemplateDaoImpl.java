@@ -1,6 +1,7 @@
 package com.bancodigital.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -35,4 +36,32 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
             return cliente;
         });
     }
+    
+    public Cliente buscarClientePorCpf(String cpf) {
+        String query = "SELECT * FROM cliente WHERE cpf = ?";
+        @SuppressWarnings("deprecation")
+		List<Cliente> clientes = jdbcTemplate.query(query, new Object[]{cpf}, (rs, rowNum) -> {
+            return new Cliente(
+                rs.getString("cpf"),
+                rs.getString("nome"),
+                rs.getString("endereco"),
+                rs.getDate("data"),
+                rs.getString("senha"),
+                rs.getString("tipoConta"),
+                rs.getDouble("saldo")
+            );
+        });
+
+        if (!clientes.isEmpty()) {
+            return clientes.get(0);
+        } else {
+            return null;
+        }
+    }
+
+    public void atualizarSaldoCliente(String cpf, double novoSaldo) {
+        String query = "UPDATE cliente SET saldo = ? WHERE cpf = ?";
+        jdbcTemplate.update(query, novoSaldo, cpf);
+    }
+
 }
