@@ -1,4 +1,4 @@
-package com.bancodigital.entity;
+package com.bancodigital.model;
 
 import java.sql.Date;
 import javax.persistence.Entity;

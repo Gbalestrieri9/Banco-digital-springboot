@@ -1,15 +1,17 @@
-package com.bancodigital.service;
+package com.bancodigital.dao.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import com.bancodigital.entity.Cliente;
+
+import com.bancodigital.dao.JdbcTemplateDao;
+import com.bancodigital.model.Cliente;
 
 import java.sql.Date;
 import java.util.List;
 
 @Service
-public class ClienteService {
+public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
 
     @Autowired
     private JdbcTemplate jdbcTemplate;

@@ -1,4 +1,4 @@
-package com.bancodigital.repository;
+package com.bancodigital.dto;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
