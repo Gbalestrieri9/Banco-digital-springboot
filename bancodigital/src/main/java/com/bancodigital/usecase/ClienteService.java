@@ -16,8 +16,8 @@ public class ClienteService {
     @Autowired
     private JdbcTemplateDaoImpl jdbcTemplateDaoImpl;
 
-    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta) {
-    	jdbcTemplateDaoImpl.criarCliente(cpf, nome, endereco, data, senha, tipoConta);
+    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta, double saldo) {
+    	jdbcTemplateDaoImpl.criarCliente(cpf, nome, endereco, data, senha, tipoConta, saldo);
     }
 
     public List<Cliente> listarClientes() {

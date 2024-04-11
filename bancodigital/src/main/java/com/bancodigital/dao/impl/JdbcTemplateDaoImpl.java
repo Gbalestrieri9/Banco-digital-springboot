@@ -16,8 +16,9 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta) {
-        jdbcTemplate.update("CALL criar_cliente(?, ?, ?, ?, ?, ?)", cpf, nome, endereco, new java.sql.Date(data.getTime()), senha,tipoConta);
+    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta, double saldo) {
+        jdbcTemplate.update("CALL criar_cliente(?, ?, ?, ?, ?, ?, ?)"
+        		, cpf, nome, endereco, new java.sql.Date(data.getTime()), senha,tipoConta, saldo);
     }
 
     public List<Cliente> listarClientes() {
@@ -28,7 +29,8 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
                 rs.getString("endereco"),
                 rs.getDate("data"),
                 rs.getString("senha"),
-                rs.getString("tipoConta")
+                rs.getString("tipoConta"),
+                rs.getDouble("saldo")
             );
             return cliente;
         });

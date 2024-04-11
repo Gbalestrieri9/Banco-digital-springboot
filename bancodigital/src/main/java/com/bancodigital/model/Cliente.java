@@ -19,8 +19,9 @@ public class Cliente {
 	private Date data;
 	private String senha;
 	private String tipoConta;
+	private double saldo;
 	
-	public Cliente(String cpf, String nome, String endereco, Date data,String senha,String tipoConta) {
+	public Cliente(String cpf, String nome, String endereco, Date data,String senha,String tipoConta, double saldo) {
 		super();
 		this.cpf = cpf;
 		this.nome = nome;
@@ -28,6 +29,7 @@ public class Cliente {
 		this.setData(data);
 		this.setSenha(senha);
 		this.setTipoConta(tipoConta);
+		this.setSaldo(saldo);
 	}
 
 	public String getCpf() {
@@ -84,5 +86,13 @@ public class Cliente {
 
 	public void setTipoConta(String tipoConta) {
 		this.tipoConta = tipoConta;
+	}
+
+	public double getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(double saldo) {
+		this.saldo = saldo;
 	}
 }

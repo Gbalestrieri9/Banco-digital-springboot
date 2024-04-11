@@ -20,11 +20,13 @@ public class ClienteController {
     @PostMapping("/create/account")
     public void addCliente(@RequestBody Cliente cliente) {
         Date dataSql = new Date(cliente.getData().getTime());
-        clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql, cliente.getSenha(),cliente.getTipoConta());
+        clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql, cliente.getSenha(),cliente.getTipoConta(),cliente.getSaldo());
     }
 
     @GetMapping("/all")
     public List<Cliente> getAllCliente(){
         return clienteService.listarClientes();
     }
+    
+    
 }
