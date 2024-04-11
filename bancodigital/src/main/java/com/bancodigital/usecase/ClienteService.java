@@ -8,6 +8,12 @@ import com.bancodigital.dao.impl.JdbcTemplateDaoImpl;
 import com.bancodigital.model.Cliente;
 import com.bancodigital.utils.Constantes;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+
+import java.security.Key;
+
 import java.sql.Date;
 import java.util.List;
 
@@ -46,5 +52,27 @@ public class ClienteService {
         	mensagem = Constantes.MSG_TRANSFERENCIA_ERRO;
         }
 		return mensagem;
+    }
+    
+    public String login(String cpf, String senha) {
+        Cliente cliente = jdbcTemplateDaoImpl.buscarClientePorCpf(cpf);
+        if (cliente != null && cliente.getSenha().equals(senha)) {
+            // Gera uma chave secreta mais forte
+            Key chaveSecreta = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+            // Gera o token JWT com os dados do cliente como claims
+            String token = Jwts.builder()
+                    .claim("cpf", cliente.getCpf())
+                    .claim("nome", cliente.getNome())
+                    .claim("endereco", cliente.getEndereco())
+                    .claim("data", cliente.getData())
+                    .claim("tipoConta", cliente.getTipoConta())
+                    .claim("saldo", cliente.getSaldo())
+                    .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 dia de expiração
+                    .signWith(chaveSecreta)
+                    .compact();
+            return token;
+        } else {
+            return null;
+        }
     }
 }

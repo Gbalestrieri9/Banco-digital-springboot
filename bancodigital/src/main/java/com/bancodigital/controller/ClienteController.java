@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bancodigital.dto.LoginRequestDTO;
 import com.bancodigital.dto.TransferenciaDTO;
 import com.bancodigital.model.Cliente;
 import com.bancodigital.usecase.ClienteService;
@@ -32,5 +33,10 @@ public class ClienteController {
     @PostMapping("/transferir")
     public String transferirSaldo(@RequestBody TransferenciaDTO transferencia) {
        return clienteService.transferirSaldo(transferencia.getCpfOrigem(), transferencia.getCpfDestino(), transferencia.getValor());
+    }
+    
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequestDTO loginRequest) {
+    	return clienteService.login(loginRequest.getCpf(),loginRequest.getSenha());
     }
 }
