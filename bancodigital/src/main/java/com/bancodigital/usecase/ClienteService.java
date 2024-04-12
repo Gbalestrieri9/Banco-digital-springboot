@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.bancodigital.dao.impl.JdbcTemplateDaoImpl;
 import com.bancodigital.model.Cliente;
 import com.bancodigital.utils.Constantes;
+import com.bancodigital.utils.JwtConfig;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -57,9 +58,9 @@ public class ClienteService {
     public String login(String cpf, String senha) {
         Cliente cliente = jdbcTemplateDaoImpl.buscarClientePorCpf(cpf);
         if (cliente != null && cliente.getSenha().equals(senha)) {
-            // Gera uma chave secreta mais forte
-            Key chaveSecreta = Keys.secretKeyFor(SignatureAlgorithm.HS256);
-            // Gera o token JWT com os dados do cliente como claims
+     
+            Key chaveSecreta = JwtConfig.getChaveSecreta();
+       
             String token = Jwts.builder()
                     .claim("cpf", cliente.getCpf())
                     .claim("nome", cliente.getNome())
@@ -67,7 +68,7 @@ public class ClienteService {
                     .claim("data", cliente.getData())
                     .claim("tipoConta", cliente.getTipoConta())
                     .claim("saldo", cliente.getSaldo())
-                    .setExpiration(new Date(System.currentTimeMillis() + 86400000)) // 1 dia de expiração
+                    .setExpiration(new Date(System.currentTimeMillis() + 86400000)) 
                     .signWith(chaveSecreta)
                     .compact();
             return token;
