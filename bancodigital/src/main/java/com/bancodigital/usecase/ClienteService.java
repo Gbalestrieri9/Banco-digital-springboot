@@ -24,8 +24,8 @@ public class ClienteService {
     @Autowired
     private JdbcTemplateDaoImpl jdbcTemplateDaoImpl;
 
-    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta, double saldo) {
-    	jdbcTemplateDaoImpl.criarCliente(cpf, nome, endereco, data, senha, tipoConta, saldo);
+    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta, double saldo, String categoriaConta) {
+    	jdbcTemplateDaoImpl.criarCliente(cpf, nome, endereco, data, senha, tipoConta, saldo, categoriaConta);
     }
 
     public List<Cliente> listarClientes() {
@@ -68,6 +68,7 @@ public class ClienteService {
                     .claim("data", cliente.getData())
                     .claim("tipoConta", cliente.getTipoConta())
                     .claim("saldo", cliente.getSaldo())
+                    .claim("categoriaConta", cliente.getCategoriaConta())
                     .setExpiration(new Date(System.currentTimeMillis() + 86400000)) 
                     .signWith(chaveSecreta)
                     .compact();
@@ -75,5 +76,9 @@ public class ClienteService {
         } else {
             return null;
         }
+    }
+    
+    public List<Cliente> visualizarSaldo(double saldo) {
+        return jdbcTemplateDaoImpl.viewSaldo(saldo);
     }
 }

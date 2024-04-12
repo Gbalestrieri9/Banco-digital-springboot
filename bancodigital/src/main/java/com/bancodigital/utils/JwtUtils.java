@@ -29,6 +29,7 @@ public class JwtUtils {
             jwtData.setEndereco(claims.get("endereco", String.class));
             jwtData.setTipoConta(claims.get("tipoConta", String.class));
             jwtData.setSaldo(claims.get("saldo", Double.class));
+            jwtData.setCategoriaConta(claims.get("categoriaConta", String.class));
 
             return jwtData;
 
@@ -38,4 +39,8 @@ public class JwtUtils {
             return null;
         }
     }
+    
+//    public static JwtData encodeToken(String token) {
+//    	return null;
+//    }
 }

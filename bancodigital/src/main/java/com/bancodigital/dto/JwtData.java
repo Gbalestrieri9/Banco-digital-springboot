@@ -7,6 +7,8 @@ public class JwtData {
     private String endereco;
     private String tipoConta;
     private Double saldo;
+    private String categoriaConta;
+    
 	public String getCpf() {
 		return cpf;
 	}
@@ -36,6 +38,12 @@ public class JwtData {
 	}
 	public void setSaldo(Double saldo) {
 		this.saldo = saldo;
+	}
+	public String getCategoriaConta() {
+		return categoriaConta;
+	}
+	public void setCategoriaConta(String categoriaConta) {
+		this.categoriaConta = categoriaConta;
 	}
 
 }

@@ -17,9 +17,9 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta, double saldo) {
-        jdbcTemplate.update("CALL criar_cliente(?, ?, ?, ?, ?, ?, ?)"
-        		, cpf, nome, endereco, new java.sql.Date(data.getTime()), senha,tipoConta, saldo);
+    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta, double saldo, String categoriaConta) {
+        jdbcTemplate.update("CALL criar_cliente(?, ?, ?, ?, ?, ?, ?, ?)"
+        		, cpf, nome, endereco, new java.sql.Date(data.getTime()), senha,tipoConta, saldo, categoriaConta);
     }
 
     public List<Cliente> listarClientes() {
@@ -31,7 +31,8 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
                 rs.getDate("data"),
                 rs.getString("senha"),
                 rs.getString("tipoConta"),
-                rs.getDouble("saldo")
+                rs.getDouble("saldo"),
+                rs.getString("categoriaConta")
             );
             return cliente;
         });
@@ -48,7 +49,8 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
                 rs.getDate("data"),
                 rs.getString("senha"),
                 rs.getString("tipoConta"),
-                rs.getDouble("saldo")
+                rs.getDouble("saldo"),
+                rs.getString("categoriaConta")
             );
         });
 
@@ -63,5 +65,23 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
         String query = "UPDATE cliente SET saldo = ? WHERE cpf = ?";
         jdbcTemplate.update(query, novoSaldo, cpf);
     }
+    
+    @SuppressWarnings("deprecation")
+	public List<Cliente> viewSaldo(double saldo) {
+        return jdbcTemplate.query("SELECT * FROM listar_clientes() WHERE saldo = ?", new Object[]{saldo}, (rs, rowNum) -> {
+            Cliente cliente = new Cliente(
+                rs.getString("cpf"),
+                rs.getString("nome"),
+                rs.getString("endereco"),
+                rs.getDate("data"),
+                rs.getString("senha"),
+                rs.getString("tipoConta"),
+                rs.getDouble("saldo"),
+                rs.getString("categoriaConta")
+            );
+            return cliente;
+        });
+    }
+
 
 }
