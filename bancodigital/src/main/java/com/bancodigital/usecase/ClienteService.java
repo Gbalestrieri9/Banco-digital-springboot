@@ -23,10 +23,19 @@ public class ClienteService {
     
     @Autowired
     private JdbcTemplateDaoImpl jdbcTemplateDaoImpl;
+    
 
-    public void criarCliente(String cpf, String nome, String endereco, Date data , String senha, String tipoConta, double saldo, String categoriaConta) {
-    	jdbcTemplateDaoImpl.criarCliente(cpf, nome, endereco, data, senha, tipoConta, saldo, categoriaConta);
+    public String criarCliente(String cpf, String nome, String endereco, Date data, String senha, String tipoConta, double saldo, String categoriaConta) {
+        if (!isValidTipoConta(tipoConta)) {
+            return Constantes.MSG_CRIACAO_CLIENTE_TIPO_CONTA_ERRO;
+        } else if (!isValidCategoriaConta(categoriaConta)) {
+            return Constantes.MSG_CRIACAO_CLIENTE_CATEGORIA_CONTA_ERRO;
+        } else {
+            jdbcTemplateDaoImpl.criarCliente(cpf, nome, endereco, data, senha, tipoConta, saldo, categoriaConta);
+            return Constantes.MSG_CRIACAO_CLIENTE_SUCESSO;
+        }
     }
+
 
     public List<Cliente> listarClientes() {
     	return jdbcTemplateDaoImpl.listarClientes();
@@ -78,7 +87,54 @@ public class ClienteService {
         }
     }
     
-    public List<Cliente> visualizarSaldo(double saldo) {
-        return jdbcTemplateDaoImpl.viewSaldo(saldo);
+    public Double visualizarSaldo(String cpfCliente) {
+        return jdbcTemplateDaoImpl.viewSaldo(cpfCliente);
     }
+    
+    private boolean isValidTipoConta(String tipoConta) {
+        return tipoConta.equalsIgnoreCase("corrente") || tipoConta.equalsIgnoreCase("poupanca");
+    }
+
+    private boolean isValidCategoriaConta(String categoriaConta) {
+        return categoriaConta.equalsIgnoreCase("comum") || categoriaConta.equalsIgnoreCase("super") || categoriaConta.equalsIgnoreCase("premium");
+    }
+    
+    public void aplicarTaxaOuRendimentoDiario(String tipoConta, String categoriaConta, Cliente contaCorrente) {
+        double saldo = contaCorrente.getSaldo();
+        if ("corrente".equals(tipoConta)) {
+            switch (categoriaConta) {
+                case "Comum":
+                    contaCorrente.setSaldo(saldo - (12.0 / 30));
+                    break;
+                case "Super":
+                    contaCorrente.setSaldo(saldo - (8.0 / 30));
+                    break;
+                case "Premium":
+                    break;
+                default:
+                    throw new IllegalArgumentException("Categoria de conta corrente não reconhecida: " + categoriaConta);
+            }
+        } else if ("poupança".equals(tipoConta)) {
+            switch (categoriaConta) {
+                case "Comum":
+                    contaCorrente.setSaldo(saldo + (saldo * 0.005 / 30));
+                    break;
+                case "Super":
+                    contaCorrente.setSaldo(saldo + (saldo * 0.007 / 30));
+                    break;
+                case "Premium":
+                    contaCorrente.setSaldo(saldo + (saldo * 0.009 / 30));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Categoria de conta poupança não reconhecida: " + categoriaConta);
+            }
+        } else {
+            throw new IllegalArgumentException("Tipo de conta não reconhecido: " + tipoConta);
+        }
+    }
+    
+	public String alterarSenhaComToken(String token, String novaSenha) {
+		jdbcTemplateDaoImpl.alterarSenha(token, novaSenha);
+		return "Senha alterada com sucesso!";
+	}
 }

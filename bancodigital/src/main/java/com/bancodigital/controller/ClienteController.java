@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bancodigital.dto.LoginRequestDTO;
@@ -26,7 +27,7 @@ public class ClienteController {
     
     @Autowired
     private ClienteService clienteService;
-
+    
     @PostMapping("/create/account")
     public void addCliente(@RequestBody Cliente cliente) {
         Date dataSql = new Date(cliente.getData().getTime());
@@ -51,18 +52,20 @@ public class ClienteController {
     }
     
     @GetMapping("/saldo")
-    public ResponseEntity<List<Cliente>> visualizarSaldo(@RequestHeader("Authorization") String token) {
+    public ResponseEntity<Double> visualizarSaldo(@RequestHeader("Authorization") String token) {
         JwtData jwtData = JwtUtils.decodeToken(token);
         
-        if (jwtData == null) {
-        	return ResponseEntity.badRequest().body(java.util.Collections.emptyList());
-        }
+        double saldo = clienteService.visualizarSaldo(jwtData.getCpf()); 
         
-        double saldo = jwtData.getSaldo(); // Obtém o saldo do JwtData
-        
-        List<Cliente> clientes = clienteService.visualizarSaldo(saldo); // Chama o serviço para visualizar o saldo
-        
-        return ResponseEntity.ok(clientes);
+        return ResponseEntity.ok(saldo);
     }
+    
+   @PostMapping("/alterar-senha")
+    public ResponseEntity<String> alterarSenha(@RequestHeader("Authorization") String token,
+                                               @RequestParam("novaSenha") String novaSenha) {
+        String resposta = clienteService.alterarSenhaComToken(token, novaSenha);
+       return ResponseEntity.ok(resposta);
+   }
+
 
 }

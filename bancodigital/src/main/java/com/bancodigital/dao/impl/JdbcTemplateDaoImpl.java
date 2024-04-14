@@ -67,21 +67,14 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
     }
     
     @SuppressWarnings("deprecation")
-	public List<Cliente> viewSaldo(double saldo) {
-        return jdbcTemplate.query("SELECT * FROM listar_clientes() WHERE saldo = ?", new Object[]{saldo}, (rs, rowNum) -> {
-            Cliente cliente = new Cliente(
-                rs.getString("cpf"),
-                rs.getString("nome"),
-                rs.getString("endereco"),
-                rs.getDate("data"),
-                rs.getString("senha"),
-                rs.getString("tipoConta"),
-                rs.getDouble("saldo"),
-                rs.getString("categoriaConta")
-            );
-            return cliente;
-        });
+    public Double viewSaldo(String cpfCliente) {
+        return jdbcTemplate.queryForObject("SELECT saldo FROM listar_clientes() WHERE cpf = ?",
+                new Object[]{cpfCliente}, Double.class);
     }
 
+    public void alterarSenha(String cpf, String novaSenha) {
+        String updateQuery = "UPDATE cliente SET senha = ? WHERE cpf = ?";
+        jdbcTemplate.update(updateQuery, novaSenha, cpf);
+    }
 
 }
