@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.bancodigital.dao.impl.JdbcTemplateDaoImpl;
 import com.bancodigital.model.Cliente;
+import com.bancodigital.utils.CPFUtil;
 import com.bancodigital.utils.Constantes;
 import com.bancodigital.utils.JwtConfig;
 
@@ -26,15 +27,13 @@ public class ClienteService {
 	@Autowired
 	private JdbcTemplateDaoImpl jdbcTemplateDaoImpl;
 
-	private static final Pattern CPF_PATTERN = Pattern.compile("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}");
-
 	public String criarCliente(String cpf, String nome, String endereco, Date data, String senha, String tipoConta,
 			double saldo, String categoriaConta) {
 		if (!isValidTipoConta(tipoConta)) {
 			return Constantes.MSG_CRIACAO_CLIENTE_TIPO_CONTA_ERRO;
 		} else if (!isValidCategoriaConta(categoriaConta)) {
 			return Constantes.MSG_CRIACAO_CLIENTE_CATEGORIA_CONTA_ERRO;
-		} else if (!isValidCPF(cpf)) {
+		} else if (!CPFUtil.isValidCPF(cpf)) {
 			return Constantes.MSG_CADASTRO_CPF_ERRO;
 		} else {
 			jdbcTemplateDaoImpl.criarCliente(cpf, nome, endereco, data, senha, tipoConta, saldo, categoriaConta);
@@ -145,10 +144,6 @@ public class ClienteService {
 
 	public void ajustarLimiteTransacoes(String cpfCliente, int novoLimite) {
 		jdbcTemplateDaoImpl.atualizarLimiteTransacoes(cpfCliente, novoLimite);
-	}
-
-	private boolean isValidCPF(String cpf) {
-		return CPF_PATTERN.matcher(cpf).matches();
 	}
 
 }
