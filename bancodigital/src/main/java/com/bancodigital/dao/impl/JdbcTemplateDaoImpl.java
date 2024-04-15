@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.bancodigital.dao.JdbcTemplateDao;
+import com.bancodigital.model.CartaoCredito;
 import com.bancodigital.model.Cliente;
 
 import java.sql.Date;
@@ -78,4 +79,32 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
         return "Senha alterada com sucesso!";
     }
 
+	public void criarCartaoDeCredito(String cpf, double limiteCartao) {
+		String sql = "INSERT INTO CartaoCredito (limite_credito, valor_fatura, cliente_id) " +
+                "VALUES (?, 0, (SELECT id FROM Cliente WHERE cpf = ?))";
+		jdbcTemplate.update(sql,limiteCartao,cpf);
+	}
+	
+	@SuppressWarnings("deprecation")
+	public CartaoCredito consultarCartaoDeCredito(String cpfCliente) {
+		String sql = "SELECT * FROM CartaoCredito WHERE cliente_id = (SELECT id FROM Cliente WHERE cpf = ?)";
+		return jdbcTemplate.queryForObject(sql, new Object[]{cpfCliente}, (rs, rowNum) -> {
+            CartaoCredito cartao = new CartaoCredito();
+            cartao.setId(rs.getLong("id"));
+            cartao.setLimiteCredito(rs.getDouble("limite_credito"));
+            cartao.setValorFatura(rs.getDouble("valor_fatura"));
+            return cartao;
+        });
+	}
+	
+	public void atualizarLimiteCartao(String cpfCliente, double novoLimite) {
+	    String sql = "UPDATE CartaoCredito SET limite_credito = ? WHERE cliente_id = (SELECT id FROM Cliente WHERE cpf = ?)";
+	    jdbcTemplate.update(sql, novoLimite, cpfCliente);
+	}
+
+	public void atualizarValorFatura(String cpfCliente, double novaFatura) {
+	    String sql = "UPDATE CartaoCredito SET valor_fatura = ? WHERE cliente_id = (SELECT id FROM Cliente WHERE cpf = ?)";
+	    jdbcTemplate.update(sql, novaFatura, cpfCliente);
+	}
+   
 }

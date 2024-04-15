@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bancodigital.dto.LoginRequestDTO;
+import com.bancodigital.dto.PagamentoDTO;
 import com.bancodigital.dto.TransferenciaDTO;
+import com.bancodigital.model.CartaoCredito;
 import com.bancodigital.model.Cliente;
+import com.bancodigital.usecase.CartaoService;
 import com.bancodigital.usecase.ClienteService;
 import com.bancodigital.utils.JwtUtils;
 import com.bancodigital.dto.JwtData;
@@ -22,51 +25,93 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.lang.Collections;
 
-@RestController 
+@RestController
 public class ClienteController {
-    
-    @Autowired
-    private ClienteService clienteService;
-    
-    @PostMapping("/create/account")
-    public void addCliente(@RequestBody Cliente cliente) {
-        Date dataSql = new Date(cliente.getData().getTime());
-        clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql, cliente.getSenha(),cliente.getTipoConta(),cliente.getSaldo(),cliente.getCategoriaConta());
-    }
 
-    @GetMapping("/all")
-    public List<Cliente> getAllCliente(){
-        return clienteService.listarClientes();
-    }
-    
-    @PostMapping("/transferir")
-    public String transferirSaldo(@RequestBody TransferenciaDTO transferencia, @RequestHeader("Authorization") String token) {
-    	JwtData jwtData = JwtUtils.decodeToken(token);
-        
-       return clienteService.transferirSaldo(jwtData.getCpf(), transferencia.getCpfDestino(), transferencia.getValor());
-    }
-    
-    @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDTO loginRequest) {
-    	return clienteService.login(loginRequest.getCpf(),loginRequest.getSenha());
-    }
-    
-    @GetMapping("/saldo")
-    public ResponseEntity<Double> visualizarSaldo(@RequestHeader("Authorization") String token) {
+	@Autowired
+	private ClienteService clienteService;
+
+	@Autowired
+	private CartaoService cartaoService;
+
+	@PostMapping("/create/account")
+	public void addCliente(@RequestBody Cliente cliente) {
+		Date dataSql = new Date(cliente.getData().getTime());
+		clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql,
+				cliente.getSenha(), cliente.getTipoConta(), cliente.getSaldo(), cliente.getCategoriaConta());
+	}
+
+	@GetMapping("/all")
+	public List<Cliente> getAllCliente() {
+		return clienteService.listarClientes();
+	}
+
+	@PostMapping("/transferir")
+	public String transferirSaldo(@RequestBody TransferenciaDTO transferencia,
+			@RequestHeader("Authorization") String token) {
+		JwtData jwtData = JwtUtils.decodeToken(token);
+
+		return clienteService.transferirSaldo(jwtData.getCpf(), transferencia.getCpfDestino(),
+				transferencia.getValor());
+	}
+
+	@PostMapping("/login")
+	public String login(@RequestBody LoginRequestDTO loginRequest) {
+		return clienteService.login(loginRequest.getCpf(), loginRequest.getSenha());
+	}
+
+	@GetMapping("/saldo")
+	public ResponseEntity<Double> visualizarSaldo(@RequestHeader("Authorization") String token) {
+		JwtData jwtData = JwtUtils.decodeToken(token);
+
+		double saldo = clienteService.visualizarSaldo(jwtData.getCpf());
+
+		return ResponseEntity.ok(saldo);
+	}
+
+	@PostMapping("/alterar-senha")
+	public ResponseEntity<String> alterarSenha(@RequestHeader("Authorization") String token,
+			@RequestParam("novaSenha") String novaSenha) {
+		JwtData jwtData = JwtUtils.decodeToken(token);
+		String resposta = clienteService.alterarSenha(jwtData.getCpf(), novaSenha);
+		return ResponseEntity.ok(resposta);
+	}
+
+	@PostMapping("/criar-cartao")
+	public ResponseEntity<String> criarCartaoCredito(@RequestHeader("Authorization") String token) {
+		JwtData jwtData = JwtUtils.decodeToken(token);
+		double limiteCartao = 0;
+
+		if (!jwtData.getTipoConta().equalsIgnoreCase("corrente")) {
+			return ResponseEntity.badRequest().body("Apenas contas corrente podem ter cartão de crédito.");
+		} else {
+			limiteCartao = cartaoService.criarCartao(jwtData.getCpf(), jwtData.getCategoriaConta());
+		}
+
+		return ResponseEntity.ok("Cartão de crédito criado com sucesso! Limite: " + limiteCartao);
+	}
+	
+	@PostMapping("/efetuar-pagamento")
+	public ResponseEntity<String> efetuarPagamento(@RequestBody PagamentoDTO pagamento, @RequestHeader("Authorization") String token) {
+	    JwtData jwtData = JwtUtils.decodeToken(token);
+	    String cpfCliente = jwtData.getCpf();
+	    
+	    cartaoService.efetuarPagamento(cpfCliente,pagamento);
+	    
+	    return null;
+	}
+	
+	@GetMapping("/consultar-cartao")
+    public ResponseEntity<CartaoCredito> consultarCartaoCredito(@RequestHeader("Authorization") String token) {
         JwtData jwtData = JwtUtils.decodeToken(token);
+        String cpfCliente = jwtData.getCpf();
         
-        double saldo = clienteService.visualizarSaldo(jwtData.getCpf()); 
+        CartaoCredito cartaoCredito = cartaoService.recuperarCartaoCredito(cpfCliente);
         
-        return ResponseEntity.ok(saldo);
+        if (cartaoCredito == null) {
+            return ResponseEntity.notFound().build();
+        }
+        
+        return ResponseEntity.ok(cartaoCredito);
     }
-    
-   @PostMapping("/alterar-senha")
-    public ResponseEntity<String> alterarSenha(@RequestHeader("Authorization") String token,
-                                               @RequestParam("novaSenha") String novaSenha) {
-	   JwtData jwtData = JwtUtils.decodeToken(token);
-       String resposta = clienteService.alterarSenha(jwtData.getCpf(), novaSenha);
-       return ResponseEntity.ok(resposta);
-   }
-
-
 }
