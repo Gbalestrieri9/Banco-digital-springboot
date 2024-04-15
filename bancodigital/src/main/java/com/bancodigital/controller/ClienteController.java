@@ -54,6 +54,10 @@ public class ClienteController {
 	public String transferirSaldo(@RequestBody TransferenciaDTO transferencia,
 			@RequestHeader("Authorization") String token) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
+		
+		if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
 
 		return clienteService.transferirSaldo(jwtData.getCpf(), transferencia.getCpfDestino(),
 				transferencia.getValor());
@@ -81,6 +85,11 @@ public class ClienteController {
 	public ResponseEntity<String> alterarSenha(@RequestHeader("Authorization") String token,
 			@RequestParam("novaSenha") String novaSenha) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
+		
+		if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
+		
 		String resposta = clienteService.alterarSenha(jwtData.getCpf(), novaSenha);
 		return ResponseEntity.ok(resposta);
 	}
@@ -89,6 +98,10 @@ public class ClienteController {
 	public ResponseEntity<String> criarCartaoCredito(@RequestHeader("Authorization") String token) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
 		double limiteCartao = 0;
+		
+		if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
 
 		if (!jwtData.getTipoConta().equalsIgnoreCase("corrente")) {
 			return ResponseEntity.badRequest().body("Apenas contas corrente podem ter cartão de crédito.");
@@ -104,6 +117,10 @@ public class ClienteController {
 	    JwtData jwtData = JwtUtils.decodeToken(token);
 	    String cpfCliente = jwtData.getCpf();
 	    
+	    if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
+	    
 	    cartaoService.efetuarPagamento(cpfCliente,pagamento);
 	    
 	    return null;
@@ -113,6 +130,10 @@ public class ClienteController {
     public ResponseEntity<CartaoCredito> consultarCartaoCredito(@RequestHeader("Authorization") String token) {
         JwtData jwtData = JwtUtils.decodeToken(token);
         String cpfCliente = jwtData.getCpf();
+        
+        if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
         
         CartaoCredito cartaoCredito = cartaoService.recuperarCartaoCredito(cpfCliente);
         
@@ -148,6 +169,10 @@ public class ClienteController {
 		JwtData jwtData = JwtUtils.decodeToken(token);
 		String cpfCliente = jwtData.getCpf();
 		
+		if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
+		
 		clienteService.ajustarLimiteTransacoes(cpfCliente,novolimite);
 		return ResponseEntity.ok(null);
 	}
@@ -156,6 +181,11 @@ public class ClienteController {
 	public ResponseEntity<String> contratarApoliceViagem(@RequestHeader("Authorization") String token) {
 	    JwtData jwtData = JwtUtils.decodeToken(token);
 	    String cpfCliente = jwtData.getCpf();
+	    
+	    if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
+	    
 	    double valorApolice = cartaoService.gerarApoliceSeguroViagem(jwtData.getCategoriaConta());
 	    
 	    cartaoService.salvarApoliceViagem(cpfCliente, valorApolice);
@@ -166,6 +196,11 @@ public class ClienteController {
 	public ResponseEntity<String> contratarApoliceFraude(@RequestHeader("Authorization") String token) {
 	    JwtData jwtData = JwtUtils.decodeToken(token);
 	    String cpfCliente = jwtData.getCpf();
+	    
+	    if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
+	    
 	    String detalhesApolice = cartaoService.gerarApoliceSeguroFraude();
 	    
 	    cartaoService.salvarApoliceFraude(cpfCliente, detalhesApolice);

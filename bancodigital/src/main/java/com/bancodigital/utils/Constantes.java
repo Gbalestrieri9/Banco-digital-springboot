@@ -12,4 +12,5 @@ public class Constantes {
 	public static final double LIMITE_MAXIMO_CARTAO_CREDITO = 0;
 	public static final String MSG_CARTAO_CREDITO_LIMITE_ERRO = "Limite do cartão de crédito ultrapassa o limite máximo permitido.";
 	public static final String MSG_CARTAO_CREDITO_CATEGORIA_ERRO = "Categoria de conta não reconhecida para criar o cartão de crédito.";
+	public static final String MSG_CADASTRO_CPF_ERRO = "CPF inválido.";
 }
