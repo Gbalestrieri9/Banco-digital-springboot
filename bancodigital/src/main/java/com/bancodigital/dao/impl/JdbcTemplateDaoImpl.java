@@ -122,5 +122,25 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
 	    jdbcTemplate.update(sql, novoLimite, cpfCliente);
 	}
 	
+	public void salvarApoliceViagem(Long cartaoCreditoId, Double valorApolice) {
+	    String sql = "INSERT INTO ApoliceViagem (cartao_credito_id, detalhes) VALUES (?, ?)";
+	    jdbcTemplate.update(sql, cartaoCreditoId, valorApolice);
+	}
+
+	public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
+	    Cliente cliente = buscarClientePorCpf(cpfCliente);
+	    if (cliente != null) {
+	        String sql = "INSERT INTO ApoliceFraude (cpf_cliente, detalhes) VALUES (?, ?)";
+	        jdbcTemplate.update(sql, cpfCliente, detalhesApolice);
+	    }
+	}
 	
+	public Long buscarCartaoCreditoIdPorCpfCliente(String cpfCliente) {
+	    String sql = "SELECT id FROM CartaoCredito WHERE cliente_id = (SELECT id FROM Cliente WHERE cpf = ?)";
+	    try {
+	        return jdbcTemplate.queryForObject(sql, Long.class, cpfCliente);
+	    } catch (EmptyResultDataAccessException e) {
+	        return null;
+	    }
+	}
 }

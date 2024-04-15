@@ -91,5 +91,28 @@ public class CartaoService {
 	        jdbcTemplateDaoImpl.atualizarValorFatura(cpfCliente, novaFatura);
 	    }
 	}
+	
+	public double gerarApoliceSeguroViagem(String tipoConta) {
+		double valorApolice = 50.0; 
+        if (tipoConta.equalsIgnoreCase("premium")) {
+        	valorApolice = 0;
+        } else if (tipoConta.equalsIgnoreCase("comum") || tipoConta.equalsIgnoreCase("super")) {
+            valorApolice = 50.0; 
+        } 
+           return valorApolice;
+    }
+	
+	public String gerarApoliceSeguroFraude() {
+        double valorApolice = 5000.0; 
+        return "Seguro de Fraude: Cobertura automática. Valor da apólice: R$" + valorApolice;
+    }
+	
+	public void salvarApoliceViagem(String cpfCliente, Double valorApolice) {
+        clienteService.salvarApoliceViagem(cpfCliente, valorApolice);
+    }
+
+    public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
+        clienteService.salvarApoliceFraude(cpfCliente, detalhesApolice);
+    }
 
 }

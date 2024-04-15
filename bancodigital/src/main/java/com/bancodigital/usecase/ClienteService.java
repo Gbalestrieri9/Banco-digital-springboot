@@ -1,6 +1,7 @@
 package com.bancodigital.usecase;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -148,4 +149,14 @@ public class ClienteService {
 	public void ajustarLimiteTransacoes(String cpfCliente, int novoLimite) {
 	    jdbcTemplateDaoImpl.atualizarLimiteTransacoes(cpfCliente, novoLimite);
 	}
+	
+	public void salvarApoliceViagem(String cpfCliente, Double valorApolice) {
+		Long cartaoCreditoId = jdbcTemplateDaoImpl.buscarCartaoCreditoIdPorCpfCliente(cpfCliente);
+	    jdbcTemplateDaoImpl.salvarApoliceViagem(cartaoCreditoId, valorApolice);
+	}
+
+	public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
+	    jdbcTemplateDaoImpl.salvarApoliceFraude(cpfCliente, detalhesApolice);
+	}
+
 }
