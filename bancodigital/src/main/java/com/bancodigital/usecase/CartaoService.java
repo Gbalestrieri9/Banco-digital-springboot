@@ -63,6 +63,10 @@ public class CartaoService {
 			jdbcTemplateDaoImpl.atualizarLimiteCartao(cpfCliente, novoLimiteCartao);
 		    jdbcTemplateDaoImpl.atualizarValorFatura(cpfCliente, novaFatura);
 		    
+		    if ((novoLimiteCartao / dadosCartaoDeCredito.getLimiteCredito()) <= 0.8) {
+	            aplicarTaxaUtilizacao(cpfCliente);
+	        }
+		    
 			return "Pagamento efetuado com sucesso no crédito.";
 		} else {
 			return "Tipo de pagamento inválido.";
@@ -72,5 +76,20 @@ public class CartaoService {
 	public CartaoCredito recuperarCartaoCredito(String cpfCliente) {
 		return jdbcTemplateDaoImpl.consultarCartaoDeCredito(cpfCliente);  
     }
+	
+	public void aplicarTaxaUtilizacao(String cpfCliente) {
+	    CartaoCredito cartaoCredito = recuperarCartaoCredito(cpfCliente);
+	    double limiteCredito = cartaoCredito.getLimiteCredito();
+	    double valorFatura = cartaoCredito.getValorFatura();
+	    
+	    double taxaUtilizacao = valorFatura / limiteCredito;
+	    
+	    if (taxaUtilizacao >= 0.8) {
+	        double taxa = valorFatura * 0.05;
+	        double novaFatura = valorFatura + taxa;
+	        
+	        jdbcTemplateDaoImpl.atualizarValorFatura(cpfCliente, novaFatura);
+	    }
+	}
 
 }

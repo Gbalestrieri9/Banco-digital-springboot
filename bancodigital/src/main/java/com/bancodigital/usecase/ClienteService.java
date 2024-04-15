@@ -136,4 +136,16 @@ public class ClienteService {
 	public String alterarSenha(String token, String novaSenha) {
 		return jdbcTemplateDaoImpl.alterarSenha(token, novaSenha);
 	}
+	
+	public void ativarConta(String cpfCliente) {
+	    jdbcTemplateDaoImpl.atualizarStatusConta(cpfCliente, true);
+	}
+
+	public void desativarConta(String cpfCliente) {
+	    jdbcTemplateDaoImpl.atualizarStatusConta(cpfCliente, false);
+	}
+	
+	public void ajustarLimiteTransacoes(String cpfCliente, int novoLimite) {
+	    jdbcTemplateDaoImpl.atualizarLimiteTransacoes(cpfCliente, novoLimite);
+	}
 }

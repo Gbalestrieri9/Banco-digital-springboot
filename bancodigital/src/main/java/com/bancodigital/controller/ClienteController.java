@@ -21,10 +21,6 @@ import com.bancodigital.usecase.ClienteService;
 import com.bancodigital.utils.JwtUtils;
 import com.bancodigital.dto.JwtData;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.lang.Collections;
-
 @RestController
 public class ClienteController {
 
@@ -114,4 +110,35 @@ public class ClienteController {
         
         return ResponseEntity.ok(cartaoCredito);
     }
+	
+	@PostMapping("/desativar-conta")
+	public ResponseEntity<String> desativarConta(@RequestHeader("Authorization") String token){
+		JwtData jwtData = JwtUtils.decodeToken(token);
+		String cpfCliente = jwtData.getCpf();
+		
+		clienteService.desativarConta(cpfCliente);
+		
+		return ResponseEntity.ok(null);
+	}
+	
+	@PostMapping("/ativar-conta")
+	public ResponseEntity<String> ativarConta(@RequestHeader("Authorization") String token){
+		JwtData jwtData = JwtUtils.decodeToken(token);
+		String cpfCliente = jwtData.getCpf();
+		
+		clienteService.ativarConta(cpfCliente);
+		
+		return ResponseEntity.ok(null);
+	}
+	
+	@PostMapping("/alterar-limite-transacoes")
+	public ResponseEntity<String> alterarLimiteTransacoes(@RequestHeader("Authorization") String token,@RequestParam("novolimite") int novolimite){
+		JwtData jwtData = JwtUtils.decodeToken(token);
+		String cpfCliente = jwtData.getCpf();
+		
+		clienteService.ajustarLimiteTransacoes(cpfCliente,novolimite);
+		return ResponseEntity.ok(null);
+	}
+	
+	
 }

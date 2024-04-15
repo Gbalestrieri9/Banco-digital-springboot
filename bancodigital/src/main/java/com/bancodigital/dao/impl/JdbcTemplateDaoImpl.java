@@ -33,7 +33,9 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
                 rs.getString("senha"),
                 rs.getString("tipoConta"),
                 rs.getDouble("saldo"),
-                rs.getString("categoriaConta")
+                rs.getString("categoriaConta"),
+                rs.getBoolean("contaativa"),
+                rs.getInt("limitetransacoes")
             );
             return cliente;
         });
@@ -51,7 +53,9 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
                 rs.getString("senha"),
                 rs.getString("tipoConta"),
                 rs.getDouble("saldo"),
-                rs.getString("categoriaConta")
+                rs.getString("categoriaConta"),
+                rs.getBoolean("contaativa"),
+                rs.getInt("limitetransacoes")
             );
         });
 
@@ -107,4 +111,16 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
 	    jdbcTemplate.update(sql, novaFatura, cpfCliente);
 	}
    
+	
+	public void atualizarStatusConta(String cpfCliente, boolean status) {
+	    String sql = "UPDATE Cliente SET contaativa = ? WHERE cpf = ?";
+	    jdbcTemplate.update(sql, status, cpfCliente);
+	}
+	
+	public void atualizarLimiteTransacoes(String cpfCliente, int novoLimite) {
+	    String sql = "UPDATE Cliente SET limitetransacoes = ? WHERE cpf = ?";
+	    jdbcTemplate.update(sql, novoLimite, cpfCliente);
+	}
+	
+	
 }

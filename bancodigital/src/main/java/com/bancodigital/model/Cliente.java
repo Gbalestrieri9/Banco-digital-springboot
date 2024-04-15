@@ -21,8 +21,10 @@ public class Cliente {
 	private String tipoConta;
 	private double saldo;
 	private String categoriaConta;
+	private boolean contaativa;
+	private int limitetransacoes;
 	
-	public Cliente(String cpf, String nome, String endereco, Date data,String senha,String tipoConta, double saldo,String categoriaConta) {
+	public Cliente(String cpf, String nome, String endereco, Date data,String senha,String tipoConta, double saldo,String categoriaConta,boolean contaativa,int limitetransacoes) {
 		super();
 		this.cpf = cpf;
 		this.nome = nome;
@@ -32,6 +34,8 @@ public class Cliente {
 		this.setTipoConta(tipoConta);
 		this.setSaldo(saldo);
 		this.setCategoriaConta(categoriaConta);
+		this.setContaativa(contaativa);
+		this.setLimitetransacoes(limitetransacoes);
 	}
 
 	public String getCpf() {
@@ -104,5 +108,21 @@ public class Cliente {
 
 	public void setCategoriaConta(String categoriaConta) {
 		this.categoriaConta = categoriaConta;
+	}
+
+	public boolean isContaativa() {
+		return contaativa;
+	}
+
+	public void setContaativa(boolean contaativa) {
+		this.contaativa = contaativa;
+	}
+
+	public int getLimitetransacoes() {
+		return limitetransacoes;
+	}
+
+	public void setLimitetransacoes(int limitetransacoes) {
+		this.limitetransacoes = limitetransacoes;
 	}
 }
