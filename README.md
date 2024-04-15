@@ -9,17 +9,26 @@ Bem-vindos a uma breve explicaçäo sobe o Banco 7, um projeto em desenvolviment
 ## Back end
 Pré-requisitos: Java 17
 
-```bash
+bash
 # clonar repositório
 git clone https://github.com/Gbalestrieri9/Banco-digital-springboot.git
 
-# executar script de criação do banco
--Query.sql
--Procedure.sql
 
+bash
+# executar script de criação do banco
+Query.sql
+Procedure.sql
+
+
+bash
 # executar o projeto
 ./mvnw spring-boot:run
-```
+
+
+bash
+# importar collection no insomnia
+Insomnia_2024-04-15.json
+
 
 # Tecnologias utilizadas
 ## Back end
@@ -30,5 +39,3 @@ git clone https://github.com/Gbalestrieri9/Banco-digital-springboot.git
 ## Implantação em produção
 - Back end: Eclipse
 - Banco de dados: Postgresql
-
-
