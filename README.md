@@ -38,6 +38,10 @@ Pré-requisitos: Java 17
 # clonar repositório
 git clone https://github.com/Gbalestrieri9/Banco-digital-springboot.git
 
+# executar script de criação do banco
+-Query.sql
+-Procedure.sql
+
 # executar o projeto
 ./mvnw spring-boot:run
 ```
