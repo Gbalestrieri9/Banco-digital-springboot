@@ -12,14 +12,11 @@ public class ClienteRepository {
 
     private Connection connection;
 
-    // Construtor para estabelecer a conexão com o banco de dados
     public ClienteRepository() throws SQLException {
-        // Configurações para conexão com o banco de dados
         String url = "jdbc:postgresql://localhost:5432/db_bancodigital";
         String user = "postgres";
         String password = "clebinho";
 
-        // Estabelece a conexão
         connection = DriverManager.getConnection(url, user, password);
     }
 
@@ -29,7 +26,7 @@ public class ClienteRepository {
             statement.setString(1, cpf);
             statement.setString(2, nome);
             statement.setString(3, endereco);
-            statement.setDate(4, data); // Define a data
+            statement.setDate(4, data); 
             statement.setString(5, senha);
             statement.setString(6, tipoConta);
             statement.execute();
@@ -50,7 +47,6 @@ public class ClienteRepository {
         }
     }
 
-    // Método para fechar a conexão com o banco de dados
     public void fecharConexao() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();

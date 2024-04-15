@@ -79,6 +79,7 @@ public class ClienteService {
                     .claim("tipoConta", cliente.getTipoConta())
                     .claim("saldo", cliente.getSaldo())
                     .claim("categoriaConta", cliente.getCategoriaConta())
+                    .claim("contaativa", cliente.isContaativa())
                     .setExpiration(new Date(System.currentTimeMillis() + 86400000)) 
                     .signWith(chaveSecreta)
                     .compact();
@@ -102,7 +103,7 @@ public class ClienteService {
     
     public void aplicarTaxaOuRendimentoDiario(String tipoConta, String categoriaConta, Cliente contaCorrente) {
         double saldo = contaCorrente.getSaldo();
-        if ("corrente".equals(tipoConta)) {
+        if ("corrente".equalsIgnoreCase(tipoConta)) {
             switch (categoriaConta) {
                 case "Comum":
                     contaCorrente.setSaldo(saldo - (12.0 / 30));
@@ -115,7 +116,7 @@ public class ClienteService {
                 default:
                     throw new IllegalArgumentException("Categoria de conta corrente não reconhecida: " + categoriaConta);
             }
-        } else if ("poupança".equals(tipoConta)) {
+        } else if ("poupança".equalsIgnoreCase(tipoConta)) {
             switch (categoriaConta) {
                 case "Comum":
                     contaCorrente.setSaldo(saldo + (saldo * 0.005 / 30));

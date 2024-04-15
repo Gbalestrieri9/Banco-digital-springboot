@@ -8,6 +8,7 @@ public class JwtData {
     private String tipoConta;
     private Double saldo;
     private String categoriaConta;
+    private boolean contaativa;
     
 	public String getCpf() {
 		return cpf;
@@ -44,6 +45,12 @@ public class JwtData {
 	}
 	public void setCategoriaConta(String categoriaConta) {
 		this.categoriaConta = categoriaConta;
+	}
+	public boolean isContaativa() {
+		return contaativa;
+	}
+	public void setContaativa(boolean contaativa) {
+		this.contaativa = contaativa;
 	}
 
 }

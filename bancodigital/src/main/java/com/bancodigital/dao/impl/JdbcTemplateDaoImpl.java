@@ -123,7 +123,7 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
 	}
 	
 	public void salvarApoliceViagem(Long cartaoCreditoId, Double valorApolice) {
-	    String sql = "INSERT INTO ApoliceViagem (cartao_credito_id, detalhes) VALUES (?, ?)";
+	    String sql = "INSERT INTO ApoliceViagem (cartao_credito_id, valor_apolice) VALUES (?, ?)";
 	    jdbcTemplate.update(sql, cartaoCreditoId, valorApolice);
 	}
 

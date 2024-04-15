@@ -18,6 +18,7 @@ import com.bancodigital.model.CartaoCredito;
 import com.bancodigital.model.Cliente;
 import com.bancodigital.usecase.CartaoService;
 import com.bancodigital.usecase.ClienteService;
+import com.bancodigital.utils.Constantes;
 import com.bancodigital.utils.JwtUtils;
 import com.bancodigital.dto.JwtData;
 
@@ -31,10 +32,17 @@ public class ClienteController {
 	private CartaoService cartaoService;
 
 	@PostMapping("/create/account")
-	public void addCliente(@RequestBody Cliente cliente) {
-		Date dataSql = new Date(cliente.getData().getTime());
-		clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql,
-				cliente.getSenha(), cliente.getTipoConta(), cliente.getSaldo(), cliente.getCategoriaConta());
+	public ResponseEntity<String> addCliente(@RequestBody Cliente cliente) {
+	    Date dataSql = new Date(cliente.getData().getTime());
+	    String mensagem = clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql,
+	            cliente.getSenha(), cliente.getTipoConta(), cliente.getSaldo(), cliente.getCategoriaConta());
+	    
+	    if (mensagem.equals(Constantes.MSG_CRIACAO_CLIENTE_SUCESSO)) {
+	        clienteService.aplicarTaxaOuRendimentoDiario(cliente.getTipoConta(), cliente.getCategoriaConta(), cliente);
+	        return ResponseEntity.ok(mensagem);
+	    } else {
+	        return ResponseEntity.badRequest().body(mensagem);
+	    }
 	}
 
 	@GetMapping("/all")
@@ -59,6 +67,10 @@ public class ClienteController {
 	@GetMapping("/saldo")
 	public ResponseEntity<Double> visualizarSaldo(@RequestHeader("Authorization") String token) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
+		
+		if (!jwtData.isContaativa()) {
+	        throw new RuntimeException("Sua conta está inativa, não é possível realizar a transferência.");
+	    }
 
 		double saldo = clienteService.visualizarSaldo(jwtData.getCpf());
 
