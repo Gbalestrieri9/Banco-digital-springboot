@@ -151,13 +151,5 @@ public class ClienteService {
 	    jdbcTemplateDaoImpl.atualizarLimiteTransacoes(cpfCliente, novoLimite);
 	}
 	
-	public void salvarApoliceViagem(String cpfCliente, Double valorApolice) {
-		Long cartaoCreditoId = jdbcTemplateDaoImpl.buscarCartaoCreditoIdPorCpfCliente(cpfCliente);
-	    jdbcTemplateDaoImpl.salvarApoliceViagem(cartaoCreditoId, valorApolice);
-	}
-
-	public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
-	    jdbcTemplateDaoImpl.salvarApoliceFraude(cpfCliente, detalhesApolice);
-	}
 
 }

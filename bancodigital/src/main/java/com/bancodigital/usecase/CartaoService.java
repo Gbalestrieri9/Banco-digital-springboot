@@ -92,27 +92,27 @@ public class CartaoService {
 	    }
 	}
 	
-	public double gerarApoliceSeguroViagem(String tipoConta) {
-		double valorApolice = 50.0; 
-        if (tipoConta.equalsIgnoreCase("premium")) {
-        	valorApolice = 0;
-        } else if (tipoConta.equalsIgnoreCase("comum") || tipoConta.equalsIgnoreCase("super")) {
-            valorApolice = 50.0; 
-        } 
-           return valorApolice;
-    }
-	
+	public Double gerarApoliceSeguroViagem(String categoriaConta) {
+	    if (categoriaConta.equalsIgnoreCase("premium")) {
+	        // Seguro viagem gratuito para categoria premium
+	        return 0.0;
+	    } else {
+	        // Para outras categorias, o seguro viagem custa 50.00
+	        return 50.0;
+	    }
+	}
+
 	public String gerarApoliceSeguroFraude() {
-        double valorApolice = 5000.0; 
-        return "Seguro de Fraude: Cobertura automática. Valor da apólice: R$" + valorApolice;
-    }
-	
+	    // O seguro de fraude tem um valor base de 5000
+	    return "Cobertura automática para todos os cartões, com um valor de apólice base de 5000.";
+	}
+
 	public void salvarApoliceViagem(String cpfCliente, Double valorApolice) {
-        clienteService.salvarApoliceViagem(cpfCliente, valorApolice);
-    }
+	    Long cartaoCreditoId = jdbcTemplateDaoImpl.buscarCartaoCreditoIdPorCpfCliente(cpfCliente);
+	    jdbcTemplateDaoImpl.salvarApoliceViagem(cartaoCreditoId, valorApolice);
+	}
 
-    public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
-        clienteService.salvarApoliceFraude(cpfCliente, detalhesApolice);
-    }
-
+	public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
+	    jdbcTemplateDaoImpl.salvarApoliceFraude(cpfCliente, detalhesApolice);
+	}
 }

@@ -153,23 +153,22 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/contratar-apolice-viagem")
-    public ResponseEntity<String> contratarApoliceViagem(@RequestHeader("Authorization") String token) {
-        JwtData jwtData = JwtUtils.decodeToken(token);
-        String cpfCliente = jwtData.getCpf();
-        double valorApolice = cartaoService.gerarApoliceSeguroViagem(jwtData.getCategoriaConta());
-        
-        cartaoService.salvarApoliceViagem(cpfCliente, valorApolice);
-        return ResponseEntity.ok("Apólice de viagem contratada com sucesso.");
-        
-    }
-    
-    @PostMapping("/contratar-apolice-fraude")
-    public ResponseEntity<String> contratarApoliceFraude(@RequestHeader("Authorization") String token) {
-        JwtData jwtData = JwtUtils.decodeToken(token);
-        String cpfCliente = jwtData.getCpf();
-        String detalhesApolice = cartaoService.gerarApoliceSeguroFraude();
-        
-        cartaoService.salvarApoliceFraude(cpfCliente, detalhesApolice);
-        return ResponseEntity.ok("Apólice de fraude contratada com sucesso.");
-    }
+	public ResponseEntity<String> contratarApoliceViagem(@RequestHeader("Authorization") String token) {
+	    JwtData jwtData = JwtUtils.decodeToken(token);
+	    String cpfCliente = jwtData.getCpf();
+	    double valorApolice = cartaoService.gerarApoliceSeguroViagem(jwtData.getCategoriaConta());
+	    
+	    cartaoService.salvarApoliceViagem(cpfCliente, valorApolice);
+	    return ResponseEntity.ok("Apólice de viagem contratada com sucesso.");
+	}
+
+	@PostMapping("/contratar-apolice-fraude")
+	public ResponseEntity<String> contratarApoliceFraude(@RequestHeader("Authorization") String token) {
+	    JwtData jwtData = JwtUtils.decodeToken(token);
+	    String cpfCliente = jwtData.getCpf();
+	    String detalhesApolice = cartaoService.gerarApoliceSeguroFraude();
+	    
+	    cartaoService.salvarApoliceFraude(cpfCliente, detalhesApolice);
+	    return ResponseEntity.ok("Apólice de fraude contratada com sucesso.");
+	}
 }
