@@ -10,7 +10,9 @@ import com.bancodigital.model.CartaoCredito;
 import com.bancodigital.model.Cliente;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
@@ -122,18 +124,26 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
 	    jdbcTemplate.update(sql, novoLimite, cpfCliente);
 	}
 	
-	public void salvarApoliceViagem(Long cartaoCreditoId, Double valorApolice) {
-        String sql = "INSERT INTO ApoliceViagem (cartao_credito_id, valor_apolice) VALUES (?, ?)";
-        jdbcTemplate.update(sql, cartaoCreditoId, valorApolice);
-    }
+	public void salvarApoliceViagem(String cpfCliente,Long cartaoCreditoId, Double valorApolice) {
+//	    String sql = "INSERT INTO Apolice (cartao_credito_id, valor_apolice) VALUES (?, ?)";
+//	    jdbcTemplate.update(sql, cartaoCreditoId, valorApolice);
+	    
+	    String sql = "INSERT INTO ApoliceViagem (numero_apolice, data_contratacao, detalhes_cartao, valor_apolice, condicoes_acionamento, cartao_credito_id) VALUES (?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, gerarNumeroApolice(), LocalDate.now(),"", valorApolice, "Condições padrão", buscarCartaoCreditoIdPorCpfCliente(cpfCliente));
+	}
 
-    public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
-        Cliente cliente = buscarClientePorCpf(cpfCliente);
-        if (cliente != null) {
-            String sql = "INSERT INTO ApoliceFraude (cpf_cliente, detalhes) VALUES (?, ?)";
-            jdbcTemplate.update(sql, cpfCliente, detalhesApolice);
-        }
-    }
+	public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
+	    Cliente cliente = buscarClientePorCpf(cpfCliente);
+	    if (cliente != null) {
+	        String sql = "INSERT INTO ApoliceFraude (numero_apolice, data_contratacao, detalhes_cartao, valor_apolice, condicoes_acionamento, cartao_credito_id) VALUES (?, ?, ?, ?, ?, ?)";
+	        jdbcTemplate.update(sql, gerarNumeroApolice(), LocalDate.now(), detalhesApolice, 5000, "Condições padrão", buscarCartaoCreditoIdPorCpfCliente(cpfCliente));
+	    }
+	}
+
+	    private String gerarNumeroApolice() {
+	        UUID uuid = UUID.randomUUID();
+	        return uuid.toString();
+	    }
     
     public Long buscarCartaoCreditoIdPorCpfCliente(String cpfCliente) {
         String sql = "SELECT id FROM CartaoCredito WHERE cliente_id = (SELECT id FROM Cliente WHERE cpf = ?)";

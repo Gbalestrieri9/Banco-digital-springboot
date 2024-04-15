@@ -109,7 +109,7 @@ public class CartaoService {
 
 	public void salvarApoliceViagem(String cpfCliente, Double valorApolice) {
 	    Long cartaoCreditoId = jdbcTemplateDaoImpl.buscarCartaoCreditoIdPorCpfCliente(cpfCliente);
-	    jdbcTemplateDaoImpl.salvarApoliceViagem(cartaoCreditoId, valorApolice);
+	    jdbcTemplateDaoImpl.salvarApoliceViagem(cpfCliente,cartaoCreditoId, valorApolice);
 	}
 
 	public void salvarApoliceFraude(String cpfCliente, String detalhesApolice) {
