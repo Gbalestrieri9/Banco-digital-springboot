@@ -72,9 +72,10 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao{
                 new Object[]{cpfCliente}, Double.class);
     }
 
-    public void alterarSenha(String cpf, String novaSenha) {
+    public String alterarSenha(String cpf, String novaSenha) {
         String updateQuery = "UPDATE cliente SET senha = ? WHERE cpf = ?";
         jdbcTemplate.update(updateQuery, novaSenha, cpf);
+        return "Senha alterada com sucesso!";
     }
 
 }

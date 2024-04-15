@@ -133,8 +133,7 @@ public class ClienteService {
         }
     }
     
-	public String alterarSenhaComToken(String token, String novaSenha) {
-		jdbcTemplateDaoImpl.alterarSenha(token, novaSenha);
-		return "Senha alterada com sucesso!";
+	public String alterarSenha(String token, String novaSenha) {
+		return jdbcTemplateDaoImpl.alterarSenha(token, novaSenha);
 	}
 }

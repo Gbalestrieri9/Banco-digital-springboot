@@ -63,7 +63,8 @@ public class ClienteController {
    @PostMapping("/alterar-senha")
     public ResponseEntity<String> alterarSenha(@RequestHeader("Authorization") String token,
                                                @RequestParam("novaSenha") String novaSenha) {
-        String resposta = clienteService.alterarSenhaComToken(token, novaSenha);
+	   JwtData jwtData = JwtUtils.decodeToken(token);
+       String resposta = clienteService.alterarSenha(jwtData.getCpf(), novaSenha);
        return ResponseEntity.ok(resposta);
    }
 
