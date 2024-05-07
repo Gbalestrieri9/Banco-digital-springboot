@@ -9,6 +9,7 @@ import com.bancodigital.dao.JdbcTemplateDao;
 import com.bancodigital.model.CartaoCredito;
 import com.bancodigital.model.Cliente;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
@@ -51,9 +52,10 @@ public class JdbcTemplateDaoImpl implements JdbcTemplateDao {
 		}
 	}
 
-	public void atualizarSaldoCliente(String cpf, double novoSaldo) {
-		String callFunction = "SELECT atualizar_saldo_cliente(?, ?)";
-		jdbcTemplate.update(callFunction, cpf, novoSaldo);
+	public void atualizarSaldoCliente(String cpf, Double novoSaldo) {
+		BigDecimal valor = new BigDecimal(novoSaldo);
+	    String callProcedure = "CALL atualizar_saldo_cliente(?, ?)";
+	    jdbcTemplate.update(callProcedure, cpf, valor);
 	}
 
 	@SuppressWarnings("deprecation")
