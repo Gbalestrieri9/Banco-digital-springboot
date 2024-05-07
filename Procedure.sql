@@ -42,3 +42,35 @@ $BODY$;
 
 ALTER FUNCTION public.listar_clientes()
     OWNER TO postgres;
+
+-- PROCEDURE: public.atualizar_saldo_cliente(character varying, numeric)
+
+-- DROP PROCEDURE IF EXISTS public.atualizar_saldo_cliente(character varying, numeric);
+
+CREATE OR REPLACE PROCEDURE public.atualizar_saldo_cliente(
+	IN cpf_param character varying,
+	IN novo_saldo_param numeric)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    UPDATE cliente SET saldo = novo_saldo_param WHERE cpf = cpf_param;
+END;
+$BODY$;
+ALTER PROCEDURE public.atualizar_saldo_cliente(character varying, numeric)
+    OWNER TO postgres;
+
+-- PROCEDURE: public.alterar_senha_cliente(character varying, character varying)
+
+-- DROP PROCEDURE IF EXISTS public.alterar_senha_cliente(character varying, character varying);
+
+CREATE OR REPLACE PROCEDURE public.alterar_senha_cliente(
+	IN cpf_param character varying,
+	IN nova_senha_param character varying)
+LANGUAGE 'plpgsql'
+AS $BODY$
+BEGIN
+    UPDATE cliente SET senha = nova_senha_param WHERE cpf = cpf_param;
+END;
+$BODY$;
+ALTER PROCEDURE public.alterar_senha_cliente(character varying, character varying)
+    OWNER TO postgres;

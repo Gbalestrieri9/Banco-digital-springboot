@@ -20,6 +20,11 @@ import com.bancodigital.usecase.CartaoService;
 import com.bancodigital.usecase.ClienteService;
 import com.bancodigital.utils.Constantes;
 import com.bancodigital.utils.JwtUtils;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+
 import com.bancodigital.dto.JwtData;
 
 @RestController
@@ -32,6 +37,11 @@ public class ClienteController {
 	private CartaoService cartaoService;
 
 	@PostMapping("/create/account")
+	@Operation(description = "criar uma conta no banco")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Conta criada com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha na criação da conta")
+	})
 	public ResponseEntity<String> addCliente(@RequestBody Cliente cliente) {
 	    Date dataSql = new Date(cliente.getData().getTime());
 	    String mensagem = clienteService.criarCliente(cliente.getCpf(), cliente.getNome(), cliente.getEndereco(), dataSql,
@@ -43,14 +53,26 @@ public class ClienteController {
 	    } else {
 	        return ResponseEntity.badRequest().body(mensagem);
 	    }
+	    
+    
 	}
 
 	@GetMapping("/all")
+	@Operation(description = "Lista todos os clientes do banco")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Retorna todos os clientes"),
+			@ApiResponse (responseCode = "400", description = "Falha no retorno dos clientes")
+	})
 	public List<Cliente> getAllCliente() {
 		return clienteService.listarClientes();
 	}
 
 	@PostMapping("/transferir")
+	@Operation(description = "Transferir o valor da conta para outra")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Valor transferido com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha na transferencia")
+	})
 	public String transferirSaldo(@RequestBody TransferenciaDTO transferencia,
 			@RequestHeader("Authorization") String token) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
@@ -64,11 +86,21 @@ public class ClienteController {
 	}
 
 	@PostMapping("/login")
+	@Operation(description = "Fazer o login da conta")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Login com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha no login")
+	})
 	public String login(@RequestBody LoginRequestDTO loginRequest) {
 		return clienteService.login(loginRequest.getCpf(), loginRequest.getSenha());
 	}
 
 	@GetMapping("/saldo")
+	@Operation(description = "Visualizar o saldo da conta logada")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Retorno do saldo"),
+			@ApiResponse (responseCode = "400", description = "Falha no retorno do saldo")
+	})
 	public ResponseEntity<Double> visualizarSaldo(@RequestHeader("Authorization") String token) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
 		
@@ -82,6 +114,11 @@ public class ClienteController {
 	}
 
 	@PostMapping("/alterar-senha")
+	@Operation(description = "Alterar a senha da conta logada")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Senha trocada com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha na troca da senha")
+	})
 	public ResponseEntity<String> alterarSenha(@RequestHeader("Authorization") String token,
 			@RequestParam("novaSenha") String novaSenha) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
@@ -95,6 +132,11 @@ public class ClienteController {
 	}
 
 	@PostMapping("/criar-cartao")
+	@Operation(description = "Criar um cartão de credito na conta logada")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Cartão de credito criado com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha na criação do cartão de credito")
+	})
 	public ResponseEntity<String> criarCartaoCredito(@RequestHeader("Authorization") String token) {
 		JwtData jwtData = JwtUtils.decodeToken(token);
 		double limiteCartao = 0;
@@ -113,6 +155,11 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/efetuar-pagamento")
+	@Operation(description = "Efetuar pagamentos, com debito ou credito")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Pagamento realizado com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha no pagamento")
+	})
 	public ResponseEntity<String> efetuarPagamento(@RequestBody PagamentoDTO pagamento, @RequestHeader("Authorization") String token) {
 	    JwtData jwtData = JwtUtils.decodeToken(token);
 	    String cpfCliente = jwtData.getCpf();
@@ -127,6 +174,11 @@ public class ClienteController {
 	}
 	
 	@GetMapping("/consultar-cartao")
+	@Operation(description = "Visualizar os dados do cartão de credito")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Retorno dos dados com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha no retorno dos dados")
+	})
     public ResponseEntity<CartaoCredito> consultarCartaoCredito(@RequestHeader("Authorization") String token) {
         JwtData jwtData = JwtUtils.decodeToken(token);
         String cpfCliente = jwtData.getCpf();
@@ -145,6 +197,11 @@ public class ClienteController {
     }
 	
 	@PostMapping("/desativar-conta")
+	@Operation(description = "Desativar a conta logada")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Conta desativada com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha desativação da conta")
+	})
 	public ResponseEntity<String> desativarConta(@RequestHeader("Authorization") String token){
 		JwtData jwtData = JwtUtils.decodeToken(token);
 		String cpfCliente = jwtData.getCpf();
@@ -155,6 +212,11 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/ativar-conta")
+	@Operation(description = "Reativar a conta logada")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Conta reativada com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha na reativação da conta")
+	})
 	public ResponseEntity<String> ativarConta(@RequestHeader("Authorization") String token){
 		JwtData jwtData = JwtUtils.decodeToken(token);
 		String cpfCliente = jwtData.getCpf();
@@ -165,6 +227,11 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/alterar-limite-transacoes")
+	@Operation(description = "Alterar o limite de transações")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "Limite de transações realizada com sucesso"),
+			@ApiResponse (responseCode = "400", description = "Falha na mudança de transações")
+	})
 	public ResponseEntity<String> alterarLimiteTransacoes(@RequestHeader("Authorization") String token,@RequestParam("novolimite") int novolimite){
 		JwtData jwtData = JwtUtils.decodeToken(token);
 		String cpfCliente = jwtData.getCpf();
@@ -178,6 +245,11 @@ public class ClienteController {
 	}
 	
 	@PostMapping("/contratar-apolice-viagem")
+	@Operation(description = "Contratar seguro de viagem")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "contratação do seguro viagem realizada com sucesso "),
+			@ApiResponse (responseCode = "400", description = "Falha na contratação de viagem")
+	})
 	public ResponseEntity<String> contratarApoliceViagem(@RequestHeader("Authorization") String token) {
 	    JwtData jwtData = JwtUtils.decodeToken(token);
 	    String cpfCliente = jwtData.getCpf();
@@ -193,6 +265,11 @@ public class ClienteController {
 	}
 
 	@PostMapping("/contratar-apolice-fraude")
+	@Operation(description = "Contratar seguro de fraude")
+	@ApiResponses(value = {
+			@ApiResponse (responseCode = "200", description = "contratação do seguro fraude realizada com sucesso "),
+			@ApiResponse (responseCode = "400", description = "Falha na contratação do seguro fraude")
+	})
 	public ResponseEntity<String> contratarApoliceFraude(@RequestHeader("Authorization") String token) {
 	    JwtData jwtData = JwtUtils.decodeToken(token);
 	    String cpfCliente = jwtData.getCpf();

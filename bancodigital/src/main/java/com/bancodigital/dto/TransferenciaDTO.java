@@ -6,16 +6,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TransferenciaDTO {
-	private String cpfOrigem;
 	private String cpfDestino;
 	private double valor;
 	
-	public String getCpfOrigem() {
-		return cpfOrigem;
-	}
-	public void setCpfOrigem(String cpfOrigem) {
-		this.cpfOrigem = cpfOrigem;
-	}
 	public String getCpfDestino() {
 		return cpfDestino;
 	}
